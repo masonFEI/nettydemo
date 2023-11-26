@@ -16,12 +16,14 @@ public class NettyClient {
 
         try {
             Bootstrap bootstrap = new Bootstrap();
-            bootstrap.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
-                @Override
-                protected void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new NettyClientHandler());
-                }
-            });
+            bootstrap.group(group)
+                    .channel(NioSocketChannel.class)
+                    .handler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        protected void initChannel(SocketChannel ch) throws Exception {
+                            ch.pipeline().addLast(new NettyClientHandler());
+                        }
+                    });
 
             System.out.println(" 客户端 ok ..");
             ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 6668).sync();
