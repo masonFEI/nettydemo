@@ -40,6 +40,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
             }
         });
 
+        // 解决方案1 用户程序自定义的普通任务
         ctx.channel().eventLoop().execute(new Runnable() {
             @Override
             public void run() {
@@ -53,6 +54,8 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
             }
         });
 
+
+        //解决方案2 : 用户自定义定时任务 -》 该任务是提交到 scheduleTaskQueue中
         ctx.channel().eventLoop().schedule(new Runnable() {
             @Override
             public void run() {
