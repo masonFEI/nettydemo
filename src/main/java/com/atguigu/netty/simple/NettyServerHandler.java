@@ -8,19 +8,67 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelPipeline;
 import io.netty.util.CharsetUtil;
 
+import java.util.concurrent.TimeUnit;
+
 public class NettyServerHandler extends ChannelInboundHandlerAdapter {
+
+//    @Override
+//    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+//        System.out.println("服务器读取线程 " + Thread.currentThread().getName() + " channel = " + ctx.channel());
+//        System.out.println("server ctx = " + ctx);
+//        System.out.println("看看channel 和pipeline的关系");
+//
+//        Channel channel = ctx.channel();
+//        ChannelPipeline pipeline = ctx.pipeline();
+//        ByteBuf buf = (ByteBuf) msg;
+//        System.out.println("客户端发送消息是：" + buf.toString(CharsetUtil.UTF_8));
+//        System.out.println("客户端地址：" + channel.remoteAddress());
+//    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("服务器读取线程 " + Thread.currentThread().getName() + " channel = " + ctx.channel());
-        System.out.println("server ctx = " + ctx);
-        System.out.println("看看channel 和pipeline的关系");
+        ctx.channel().eventLoop().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5 * 1000);
+                    ctx.writeAndFlush(Unpooled.copiedBuffer("hello,客户端，喵2", CharsetUtil.UTF_8));
+                    System.out.println("channel code =" + ctx.channel().hashCode());
+                } catch (Exception ex) {
+                    System.out.println("发生异常" + ex.getMessage());
+                }
+            }
+        });
 
-        Channel channel = ctx.channel();
-        ChannelPipeline pipeline = ctx.pipeline();
-        ByteBuf buf = (ByteBuf) msg;
-        System.out.println("客户端发送消息是：" + buf.toString(CharsetUtil.UTF_8));
-        System.out.println("客户端地址：" + channel.remoteAddress());
+        ctx.channel().eventLoop().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5 * 1000);
+                    ctx.writeAndFlush(Unpooled.copiedBuffer("hello,客户端~喵3", CharsetUtil.UTF_8));
+                    System.out.println("channel code=" + ctx.channel().hashCode());
+                } catch (Exception ex) {
+                    System.out.println("发生异常" + ex.getMessage());
+                }
+            }
+        });
+
+        ctx.channel().eventLoop().schedule(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5 * 1000);
+                    ctx.writeAndFlush(Unpooled.copiedBuffer("hello,客户端~喵4", CharsetUtil.UTF_8));
+                    System.out.println("channel code=" + ctx.channel().hashCode());
+                } catch (Exception ex) {
+                    System.out.println("发生异常" + ex.getMessage());
+                }
+            }
+        }, 5, TimeUnit.SECONDS);
+
+        System.out.println("go on...");
+
+
     }
 
     @Override
