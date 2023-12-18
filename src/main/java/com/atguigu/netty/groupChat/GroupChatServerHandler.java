@@ -64,7 +64,7 @@ public class GroupChatServerHandler extends SimpleChannelInboundHandler<String> 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        ctx.close();
+        ctx.channel().close();
     }
 
 
