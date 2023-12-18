@@ -51,7 +51,7 @@ public class GroupChatServer {
                             ChannelPipeline pipeline = ch.pipeline();
                             pipeline.addLast("decoder", new StringDecoder());
                             pipeline.addLast("encoder", new StringEncoder());
-//                        pipeline.addLast(new com.atguigu.nio.groupChat.GroupChatServer());
+                            pipeline.addLast(new GroupChatServerHandler());
 
                         }
 
@@ -69,8 +69,9 @@ public class GroupChatServer {
     }
 
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws Exception {
+        GroupChatServer groupChatServer = new GroupChatServer(7000);
+        groupChatServer.run();
     }
 
 
