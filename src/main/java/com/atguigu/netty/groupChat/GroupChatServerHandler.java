@@ -1,7 +1,3 @@
-/**
- * LY.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
 package com.atguigu.netty.groupChat;
 
 import io.netty.channel.Channel;

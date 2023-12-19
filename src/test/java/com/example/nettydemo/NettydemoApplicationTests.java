@@ -8,6 +8,17 @@ class NettydemoApplicationTests {
 
 	@Test
 	void contextLoads() {
+
+		boolean b1=false;
+		boolean b2=false;
+
+		boolean res = b1 & b2;
+		System.out.println(res);
+
+
 	}
+
+
+
 
 }
