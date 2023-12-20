@@ -45,8 +45,11 @@ public class GroupChatServer {
                         protected void initChannel(SocketChannel ch) throws Exception {
 
                             ChannelPipeline pipeline = ch.pipeline();
+                            //加入解码器
                             pipeline.addLast("decoder", new StringDecoder());
+                            // 加入编码器
                             pipeline.addLast("encoder", new StringEncoder());
+                            // 加入业务处理handler
                             pipeline.addLast(new GroupChatServerHandler());
 
                         }

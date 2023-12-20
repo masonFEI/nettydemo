@@ -19,16 +19,21 @@ import java.util.Date;
  */
 public class GroupChatServerHandler extends SimpleChannelInboundHandler<String> {
 
+    // 管理所有的channel
     private static ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
+        // 将该客户加入聊天的信息推送给其他在线的客户端
+        // 不需要自己便利
         channelGroup.writeAndFlush("客户端" + channel.remoteAddress() + "加入聊天" + sdf.format(new Date()) + "\n");
         channelGroup.add(channel);
     }
 
+
+    //表示断开连接
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
@@ -36,11 +41,14 @@ public class GroupChatServerHandler extends SimpleChannelInboundHandler<String> 
         System.out.println("channelGroup size" + channelGroup.size());
     }
 
+    // 表示channel处于活动状态
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println(ctx.channel().remoteAddress() + "上线了");
     }
 
+
+    // 表示channel处于不活动状态
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         System.out.println(ctx.channel().remoteAddress() + "离线了");
@@ -50,7 +58,7 @@ public class GroupChatServerHandler extends SimpleChannelInboundHandler<String> 
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         Channel channel = ctx.channel();
         channelGroup.forEach(ch -> {
-            if (channel != ch) {
+            if (channel != ch) {// 不是当前的channel，转发消息
                 ch.writeAndFlush("客户" + channel.remoteAddress() + "发送了消息" + msg + "\n");
             } else {
                 ch.writeAndFlush("自己发送了消息" + msg + "\n");
