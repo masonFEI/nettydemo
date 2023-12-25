@@ -36,7 +36,12 @@ public class MyServer {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
-                    pipeline.addLast(new IdleStateHandler(7000, 7000, 10, TimeUnit.SECONDS));
+                    // 处理空闲状态的处理器
+                    // long readerIdleTime, 多久没有读，发送一个心跳检测包检测是否连接
+                    // long writerIdleTime, 多久没有写，发送一个心跳检测包检测是否连接
+                    // long allIdleTime，多久没有读写，发送一个心跳检测包检测是否连接
+                    pipeline.addLast(new IdleStateHandler(3, 5, 7, TimeUnit.SECONDS));
+                    // 对空闲检测进一步处理的handler
                     pipeline.addLast(new MyServerHandler());
                 }
             });
