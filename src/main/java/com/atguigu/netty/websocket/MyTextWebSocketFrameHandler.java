@@ -6,6 +6,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
 import java.time.LocalDateTime;
 
+// TextWebSocketFrame类型，表示一个文本帧
 public class MyTextWebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
 
@@ -16,6 +17,7 @@ public class MyTextWebSocketFrameHandler extends SimpleChannelInboundHandler<Tex
     }
 
 
+    // web客户端连接后，触发方法
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         System.out.println("handlerAdded 被调用" + ctx.channel().id().asLongText());

@@ -8,9 +8,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.stream.ChunkedWriteHandler;
 
 public class MyServer {
 
@@ -29,8 +31,14 @@ public class MyServer {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
+                    // 基于http的解码编码
+                    pipeline.addLast(new HttpServerCodec());
+                    // 是以块方式写
+                    pipeline.addLast(new ChunkedWriteHandler());
                     pipeline.addLast(new HttpObjectAggregator(8192));
-                    pipeline.addLast(new WebSocketServerProtocolHandler("/hello2"));
+                    // WebSocketServerProtocolHandler 核心功能将http协议升级为ws协议。保持长连接
+                    pipeline.addLast(new WebSocketServerProtocolHandler("/hello"));
+                    pipeline.addLast(new MyTextWebSocketFrameHandler());
                 }
             });
 

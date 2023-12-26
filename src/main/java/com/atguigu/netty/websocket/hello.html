@@ -10,7 +10,7 @@
     //判断当前浏览器是否支持websocket
     if(window.WebSocket) {
         //go on
-        socket = new WebSocket("ws://localhost:7000/hello2");
+        socket = new WebSocket("ws://localhost:7000/hello");
         //相当于channelReado, ev 收到服务器端回送的消息
         socket.onmessage = function (ev) {
             var rt = document.getElementById("responseText");
@@ -38,7 +38,7 @@
         if(!window.socket) { //先判断socket是否创建好
             return;
         }
-        if(socket.readyState == WebSocket.OPEN) {
+        if(socket.readyState === WebSocket.OPEN) {
             //通过socket 发送消息
             socket.send(message)
         } else {
@@ -47,9 +47,11 @@
     }
 </script>
 <form onsubmit="return false">
-    <textarea name="message" style="height: 300px; width: 300px"></textarea>
+    <label>
+        <textarea name="message" style="height: 300px; width: 300px"></textarea>
+    </label>
     <input type="button" value="发生消息" onclick="send(this.form.message.value)">
-    <textarea id="responseText" style="height: 300px; width: 300px"></textarea>
+    <label for="responseText"></label><textarea id="responseText" style="height: 300px; width: 300px"></textarea>
     <input type="button" value="清空内容" onclick="document.getElementById('responseText').value=''">
 </form>
 </body>
