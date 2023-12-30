@@ -1,12 +1,11 @@
 package com.atguigu.netty.codec;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
 
 public class NettyServer {
 
@@ -26,8 +25,9 @@ public class NettyServer {
                         // 给pipeline设置处理器
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            System.out.println("客户socketchannel hashcode=" + ch.hashCode());
-                            ch.pipeline().addLast(new NettyServerHandler());
+                            ChannelPipeline pipeline = ch.pipeline();
+                            pipeline.addLast("decoder", new ProtobufDecoder(StudentPOJO.Student.getDefaultInstance()));
+                            pipeline.addLast(new NettyServerHandler());
                         }
                     });
 
@@ -36,24 +36,23 @@ public class NettyServer {
             // 启动服务器并绑定端口
             ChannelFuture cf = bootstrap.bind(6668).sync();
 
+            cf.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if (cf.isSuccess()) {
+                        System.out.println("监听端口 6668 成功");
+                    } else {
+                        System.out.println("监听端口 6668 失败");
+                    }
+                }
+            });
+
             // 对关闭通道进行监听
             cf.channel().closeFuture().sync();
 
-//            cf.addListener(new ChannelFutureListener() {
-//                @Override
-//                public void operationComplete(ChannelFuture channelFuture) throws Exception {
-//                    if (cf.isSuccess()) {
-//                        System.out.println("监听端口 6668 成功");
-//                    } else {
-//                        System.out.println("监听端口 6668 失败");
-//                    }
-//                }
-//            });
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
-//            bossGroup.shutdownGracefully();
-//            workerGroup.shutdownGracefully();
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
         }
 
 

@@ -9,10 +9,11 @@ import io.netty.util.CharsetUtil;
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 
 
+    // 发一个student对象到服务器
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("client " + ctx);
-        ctx.writeAndFlush(Unpooled.copiedBuffer("hello,server,喵", CharsetUtil.UTF_8));
+        StudentPOJO.Student student = StudentPOJO.Student.newBuilder().setId(4).setName("智多星 吴用").build();
+        ctx.writeAndFlush(student);
     }
 
     @Override
