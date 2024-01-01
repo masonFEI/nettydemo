@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MyByteToLongDecoder extends ByteToMessageDecoder {
     /**
-     *
+     *  decode 会根据接收到的数据，被调用多次，指导确定没有新的元素被田间到list
      * @param ctx           上下文对象      the {@link ChannelHandlerContext} which this {@link ByteToMessageDecoder} belongs to
      * @param in            入站的buteBuf  the {@link ByteBuf} from which to read data
      * @param out           list集合       the {@link List} to which decoded messages should be added
