@@ -14,9 +14,11 @@ public class MyMessageDecoder extends ReplayingDecoder<Void> {
         System.out.println("MyMessageDecoder decode 被调用");
         int length = in.readInt();
 
+        // 需要将得到二进制字节码-> MessageProtocol数据包
         byte[] content = new byte[length];
         in.readBytes(content);
 
+        // 封装成MessageProtocol对象，放入out,传给下一个handler使用
         MessageProtocol messageProtocol = new MessageProtocol();
         messageProtocol.setLen(length);
         messageProtocol.setContent(content);
