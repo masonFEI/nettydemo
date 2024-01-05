@@ -21,6 +21,7 @@ public class NettyClient {
     private int count = 0;
 
 
+    // 使用代理模式，获取代理对象
     public Object getBean(final Class<?> serviceClass, final String providerName) {
         return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class<?>[]{serviceClass}, (proxy, method, args) -> {
             System.out.println("(proxy,method,args)进入..." + (++count) + "次");

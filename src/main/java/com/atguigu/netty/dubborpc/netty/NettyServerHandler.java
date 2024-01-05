@@ -1,17 +1,12 @@
 package com.atguigu.netty.dubborpc.netty;
 
 import com.atguigu.netty.dubborpc.customer.ClientBootstrap;
-import com.atguigu.netty.dubborpc.publicinterface.HelloService;
+import com.atguigu.netty.dubborpc.provider.HelloServiceImpl;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class NettyServerHandler extends ChannelInboundHandlerAdapter {
-
-
-    @Autowired
-    private HelloService helloService;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -19,7 +14,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         System.out.println("原始消息：" + msg);
 
         if (msg.toString().startsWith(ClientBootstrap.providerName)) {
-            String result = helloService.hello(msg.toString().substring(msg.toString().lastIndexOf("#") + 1));
+            String result = new HelloServiceImpl().hello(msg.toString().substring(msg.toString().lastIndexOf("#") + 1));
             ctx.writeAndFlush(result);
         }
 

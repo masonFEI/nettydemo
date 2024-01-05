@@ -9,6 +9,7 @@ public class HelloServiceImpl implements HelloService {
 
     private static int count = 0;
 
+    // 消费方调用
     @Override
     public String hello(String mes) {
         System.out.println("收到客户端消息=" + mes);

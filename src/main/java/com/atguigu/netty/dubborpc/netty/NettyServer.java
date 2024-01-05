@@ -13,12 +13,13 @@ import io.netty.handler.codec.string.StringEncoder;
 public class NettyServer {
 
 
-    public static void startServer(String hostName, int port) throws Exception {
+    // 完成nettyServer的初始化和启动
+    public static void startServer(String hostName, int port) {
         startServer0(hostName, port);
     }
 
 
-    public static void startServer0(String hostName, int port) throws Exception {
+    public static void startServer0(String hostName, int port) {
 
         NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -29,10 +30,11 @@ public class NettyServer {
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        protected void initChannel(SocketChannel ch) throws Exception {
+                        protected void initChannel(SocketChannel ch) {
                             ChannelPipeline pipeline = ch.pipeline();
                             pipeline.addLast(new StringDecoder());
                             pipeline.addLast(new StringEncoder());
+                            pipeline.addLast(new NettyServerHandler());
                         }
                     });
 
@@ -43,6 +45,8 @@ public class NettyServer {
             // 对关闭通道进行监听
             cf.channel().closeFuture().sync();
 
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

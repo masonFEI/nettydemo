@@ -5,7 +5,7 @@ import com.atguigu.netty.dubborpc.publicinterface.HelloService;
 
 public class ClientBootstrap {
 
-
+    //定义协议头
     public static final String providerName = "HelloService#hello#";
 
     public static void main(String[] args) throws Exception {
